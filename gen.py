@@ -3,7 +3,11 @@ Logic gates with VLC + m3us
 
 yep...
 """
+import os
 import math
+import sys
+from bristol import loader
+
 
 HOST = "http://:a@0/requests/vlm_cmd.xml?command="
 def pause(f): return f'vlc://pause:{f}'
@@ -102,7 +106,7 @@ class Buf(LUTGate):
     TABLE = {'0': '0', '1': '1'}
 
 
-class NotGate(LUTGate):
+class InvGate(LUTGate):
     TABLE = {'0': '1', '1': '0'}
 
 
@@ -119,25 +123,58 @@ class AndGate(LUTGate):
 
 
 def main():
-    output = ['./pins/3', './pins/3']
     # setup
     start = []
     start += ['./main.m3u']
 
     write('./start.m3u', '\n'.join(start))
 
-    # main
+    wires, in_1_wires, in_2_wires, out_wires, gates = loader(sys.argv[1])
+
+    # create all the wires
+    for wire in wires:
+        os.system(f'printf 0 > ./pins/{wire}')
+
+    # copy the input into the two inputs
+    with open(sys.argv[2]) as f:
+        for value, wire in zip(f, in_1_wires):
+            v = value.strip()
+            os.system(f'printf {v} > ./pins/{wire}')
+        f.close()
+
+    with open(sys.argv[3]) as f:
+        for value, wire in zip(f, in_2_wires):
+            v = value.strip()
+            os.system(f'printf {v} > ./pins/{wire}')
+        f.close()
+
+    # setup the circuit
     ag = AndGate()
-    ng = NotGate()
+    xg = XorGate()
+    ig = InvGate()
     body = []
-    # evaluate our circuit
-    body += ag.evaluate(['./pins/1', './pins/1'], './pins/2')
-    body += ng.evaluate(['./pins/2'], './pins/3')
+
+    for gate_type, gate_in, gate_out in gates:
+        g_in = list(map(lambda x: f'./pins/{x}', gate_in))
+        g_out = f'./pins/{gate_out[0]}'
+        match gate_type:
+            case 'AND':
+                body += ag.evaluate(g_in, g_out)
+            case 'XOR':
+                body += xg.evaluate(g_in, g_out)
+            case 'INV':
+                body += ig.evaluate(g_in, g_out)
+            case _:
+                raise Exception('unimplemented')
+
+    # print the output
     body += copy('./prefix', './done.m3u', append=False)
-    for pin in output:
+    for pin_raw in out_wires:
+        pin = f'./pins/{pin_raw}'
         body += copy(pin, './done.m3u', append=True)
         body += copy('./space', './done.m3u', append=True)
     body += copy('./postfix', './done.m3u', append=True)
+
     # loop endlessly
     body += ['./done.m3u', './main.m3u']
 

@@ -1,5 +1,6 @@
 start.m3u
 main.m3u
+done.m3u
 prefix
 prefix
 postfix
@@ -8,3 +9,4 @@ gates
 pins
 intermediate
 old
+__pycache__
