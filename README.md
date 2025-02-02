@@ -16,6 +16,8 @@ Circuit evaluation this way is slooow, each step takes at least 0.25 seconds
 because I need to add a delay or VLC adds a longer delay itself.
 Adding two 32bit ints takes 25 minutes...
 
+![Image of the playlist after its added two 32 bit ints](./img/demo.png)
+
 ## License
 
 MIT
