@@ -13,8 +13,8 @@ for defining circuits.
 `adder_32bit.txt` in `./circuits` is from [here](https://nigelsmart.github.io/MPC-Circuits/adder_32bit.txt).
 
 Circuit evaluation this way is slooow, as I need to inject a 0.25 second delay
-every steps in the playlist, as otherwise VLC will inject its own delays which
-makes it even slower.
+every few steps in the playlist, as otherwise VLC will add its own delays
+which makes it even slower.
 Adding two 32bit ints takes 5 minutes...
 
 ![Image of the playlist after its added two 32 bit ints](./img/demo.png)
