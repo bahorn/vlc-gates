@@ -12,9 +12,10 @@ This uses the [Bristol format](https://nigelsmart.github.io/MPC-Circuits/old-cir
 for defining circuits.
 `adder_32bit.txt` in `./circuits` is from [here](https://nigelsmart.github.io/MPC-Circuits/adder_32bit.txt).
 
-Circuit evaluation this way is slooow, each step takes at least 0.25 seconds
-because I need to add a delay or VLC adds a longer delay itself.
-Adding two 32bit ints takes 25 minutes...
+Circuit evaluation this way is slooow, as I need to inject a 0.25 second delay
+every steps in the playlist, as otherwise VLC will inject its own delays which
+makes it even slower.
+Adding two 32bit ints takes 5 minutes...
 
 ![Image of the playlist after its added two 32 bit ints](./img/demo.png)
 

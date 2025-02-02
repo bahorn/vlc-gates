@@ -19,7 +19,6 @@ def wrap(cmd, lst):
 
     for i in lst:
         res.append(cmd(i))
-        res.append(pause(0.25))
     return res
 
 
@@ -178,7 +177,14 @@ def main():
     # loop endlessly
     body += ['./done.m3u', './main.m3u']
 
-    write('./main.m3u', '\n'.join(body))
+    # interleave pauses every few steps for perf reasons
+    res = []
+    for i, cmd in enumerate(body):
+        if i % 5 == 0:
+            res.append(pause(0.25))
+        res.append(cmd)
+
+    write('./main.m3u', '\n'.join(res))
 
 
 if __name__ == "__main__":

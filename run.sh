@@ -1,5 +1,5 @@
 #!/bin/sh
-rm start.m3u main.m3u prefix prefix postfix space
+rm start.m3u main.m3u prefix prefix postfix space done.m3u
 rm -r gates pins intermediate
 mkdir -p gates pins intermediate
 printf "#EXTINF:123,result " > ./prefix
